@@ -21,7 +21,9 @@ export default function UsersPanel() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "http://https://leparle-backend.onrender.com";
 
   useEffect(() => {
     fetchUsers();
@@ -43,7 +45,7 @@ export default function UsersPanel() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -347,7 +349,7 @@ export default function UsersPanel() {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
-                      }
+                      },
                     )}
                   </p>
                 </div>

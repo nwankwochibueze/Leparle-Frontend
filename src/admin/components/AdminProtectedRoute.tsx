@@ -14,7 +14,7 @@ export default function AdminProtectedRoute({ children }: Props) {
   const location = useLocation();
 
   const { adminUser, isAdminAuthenticated, loading } = useAppSelector(
-    (state) => state.adminAuth
+    (state) => state.adminAuth,
   );
 
   const [verifying, setVerifying] = useState(true);
@@ -33,10 +33,10 @@ export default function AdminProtectedRoute({ children }: Props) {
       try {
         // Verify token with backend
         const response = await axios.get(
-          "http://localhost:5000/admin/verify-token",
+          "http://https://leparle-backend.onrender.com/admin/verify-token",
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         if (!response.data.success) {

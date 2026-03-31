@@ -59,7 +59,9 @@ export default function OrdersPanel() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "http://https://leparle-backend.onrender.com";
 
   useEffect(() => {
     fetchOrders();
@@ -178,7 +180,7 @@ export default function OrdersPanel() {
               value={customerTypeFilter}
               onChange={(e) =>
                 setCustomerTypeFilter(
-                  e.target.value as "all" | "registered" | "guest"
+                  e.target.value as "all" | "registered" | "guest",
                 )
               }
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -329,7 +331,7 @@ export default function OrdersPanel() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                            order.orderStatus
+                            order.orderStatus,
                           )}`}
                         >
                           {getStatusIcon(order.orderStatus)}

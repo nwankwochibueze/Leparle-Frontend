@@ -23,7 +23,7 @@ const MainLayout = () => {
       try {
         // minimum loader time for smooth UX
         await Promise.all([
-          axios.get("http://localhost:5000/homepage"),
+          axios.get("http://https://leparle-backend.onrender.com/homepage"),
           new Promise((res) => setTimeout(res, 600)),
         ]);
 
