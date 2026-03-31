@@ -1,21 +1,26 @@
 // src/config/api.ts
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+//const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "https://leparle-backend.onrender.com";
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // Paystack Configuration
 export const PAYSTACK_CONFIG = {
-  publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '',
-  isTestMode: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY?.includes('test') ?? true,
-  exchangeRate: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY?.includes('test') ? 100 : 1650,
+  publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "",
+  isTestMode:
+    import.meta.env.VITE_PAYSTACK_PUBLIC_KEY?.includes("test") ?? true,
+  exchangeRate: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY?.includes("test")
+    ? 100
+    : 1650,
 };
 
 export default API_BASE_URL;
