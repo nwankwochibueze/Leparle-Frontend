@@ -60,8 +60,7 @@ export default function OrdersPanel() {
   const [showDetails, setShowDetails] = useState(false);
 
   const API_URL =
-    import.meta.env.VITE_API_URL ||
-    "http://https://leparle-backend.onrender.com";
+    import.meta.env.VITE_API_URL || "https://leparle-backend.onrender.com";
 
   useEffect(() => {
     fetchOrders();

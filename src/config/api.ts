@@ -1,7 +1,7 @@
 // src/config/api.ts
 import axios from "axios";
 
-//const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://https://leparle-backend.onrender.com';
+//const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://leparle-backend.onrender.com';
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "https://leparle-backend.onrender.com";
 

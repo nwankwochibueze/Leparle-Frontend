@@ -33,7 +33,7 @@ export default function AdminProtectedRoute({ children }: Props) {
       try {
         // Verify token with backend
         const response = await axios.get(
-          "http://https://leparle-backend.onrender.com/admin/verify-token",
+          "https://leparle-backend.onrender.com/admin/verify-token",
           {
             headers: { Authorization: `Bearer ${token}` },
           },

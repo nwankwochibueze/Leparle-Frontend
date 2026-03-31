@@ -16,7 +16,7 @@ export const HomepageProvider = ({
     const fetchHomepage = async () => {
       try {
         const res = await axios.get(
-          "http://https://leparle-backend.onrender.com/homepage",
+          "https://leparle-backend.onrender.com/homepage",
         );
         setData(res.data.data[0]);
       } catch (err) {
