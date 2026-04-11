@@ -77,12 +77,12 @@ export default function Dashboard() {
     fetchStats();
   }, [fetchStats]);
 
-  const handleLogout = () => {
+const handleLogout = () => {
   localStorage.removeItem("adminToken");
   localStorage.removeItem("adminData");
   dispatch(adminLogout());
-  navigate("/admin/login");
-};
+  window.location.href = "/admin/login"; // ← hard redirect, not navigate()
+}; 
   const links = [
     { label: "Edit Homepage", path: "/admin/homepage", icon: FiPackage },
     { label: "Manage Products", path: "/admin/products", icon: FiShoppingBag },
