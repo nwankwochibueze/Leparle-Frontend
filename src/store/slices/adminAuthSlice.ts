@@ -13,7 +13,7 @@ interface AdminAuthState {
 // Convert technical errors to user-friendly messages for admins
 const getAdminFriendlyError = (error: unknown): string => {
   // Type guard for axios errors
-  if (typeof error === 'object' && error !== null) {
+  if (typeof error === "object" && error !== null) {
     const err = error as {
       message?: string;
       code?: string;
@@ -27,12 +27,12 @@ const getAdminFriendlyError = (error: unknown): string => {
     };
 
     // Network/connection errors
-    if (err.message?.includes('Network Error') || err.code === 'ERR_NETWORK') {
+    if (err.message?.includes("Network Error") || err.code === "ERR_NETWORK") {
       return "Connection error. Please check your network and try again.";
     }
 
     // Server timeout
-    if (err.message?.includes('timeout') || err.code === 'ECONNABORTED') {
+    if (err.message?.includes("timeout") || err.code === "ECONNABORTED") {
       return "Server timeout. Please try again.";
     }
 
@@ -80,8 +80,8 @@ const getAdminFriendlyError = (error: unknown): string => {
 };
 
 // Load admin token/user on startup
-const adminToken = localStorage.getItem("admin-token");
-const adminUserStr = localStorage.getItem("admin-user");
+const adminToken = localStorage.getItem("adminToken"); // ✅
+const adminUserStr = localStorage.getItem("adminData"); // ✅
 const adminUser = adminUserStr ? (JSON.parse(adminUserStr) as User) : null;
 
 const initialState: AdminAuthState = {
@@ -97,7 +97,7 @@ export const adminLogin = createAsyncThunk(
   "adminAuth/login",
   async (
     credentials: { email: string; password: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axiosInstance.post("/admin/login", credentials);
@@ -112,7 +112,7 @@ export const adminLogin = createAsyncThunk(
       const friendlyError = getAdminFriendlyError(error);
       return rejectWithValue(friendlyError);
     }
-  }
+  },
 );
 
 // Get Admin Profile
@@ -131,7 +131,7 @@ export const getAdminProfile = createAsyncThunk(
       const friendlyError = getAdminFriendlyError(error);
       return rejectWithValue(friendlyError);
     }
-  }
+  },
 );
 
 const adminAuthSlice = createSlice({
@@ -143,8 +143,8 @@ const adminAuthSlice = createSlice({
       state.adminToken = null;
       state.isAdminAuthenticated = false;
       state.error = null;
-      localStorage.removeItem("admin-token");
-      localStorage.removeItem("admin-user");
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminData");
     },
     clearAdminError: (state) => {
       state.error = null;
@@ -162,12 +162,13 @@ const adminAuthSlice = createSlice({
         state.adminUser = action.payload.user;
         state.adminToken = action.payload.token;
         state.isAdminAuthenticated = true;
-        localStorage.setItem("admin-token", action.payload.token);
-        localStorage.setItem("admin-user", JSON.stringify(action.payload.user));
+        localStorage.setItem("adminToken", action.payload.token);
+        localStorage.setItem("adminData", JSON.stringify(action.payload.user));
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || "Admin login failed. Please try again.";
+        state.error =
+          (action.payload as string) || "Admin login failed. Please try again.";
       });
 
     // Get Admin Profile
@@ -181,7 +182,7 @@ const adminAuthSlice = createSlice({
       })
       .addCase(getAdminProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || "Failed to load profile.";
+        state.error = (action.payload as string) || "Failed to load profile.";
         state.adminUser = null;
         state.adminToken = null;
         state.isAdminAuthenticated = false;
