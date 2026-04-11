@@ -21,9 +21,9 @@ export default function AdminProtectedRoute({ children }: Props) {
 
   useEffect(() => {
     const verifyAdminToken = async () => {
+      setVerifying(true);
       const token = localStorage.getItem("adminToken");
 
-      // No token → logout
       if (!token) {
         dispatch(adminLogout());
         setVerifying(false);
@@ -31,7 +31,6 @@ export default function AdminProtectedRoute({ children }: Props) {
       }
 
       try {
-        // Verify token with backend
         const response = await axios.get(
           "https://leparle-backend.onrender.com/admin/verify-token",
           {
@@ -44,11 +43,8 @@ export default function AdminProtectedRoute({ children }: Props) {
         }
       } catch (err) {
         console.error("Token verification failed:", err);
-
-        // Remove invalid token
-        localStorage.removeItem("admin-token");
-        localStorage.removeItem("admin-user");
-
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminData");
         dispatch(adminLogout());
       } finally {
         setVerifying(false);
@@ -56,9 +52,8 @@ export default function AdminProtectedRoute({ children }: Props) {
     };
 
     verifyAdminToken();
-  }, [dispatch]);
+  }, [dispatch, isAdminAuthenticated]);
 
-  // Show loading while Redux or verification is loading
   if (loading || verifying) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -70,16 +65,13 @@ export default function AdminProtectedRoute({ children }: Props) {
     );
   }
 
-  // Not authenticated → redirect to login
   if (!isAdminAuthenticated) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  // Authenticated but not admin → redirect home
   if (adminUser?.role !== "admin") {
     return <Navigate to="/" replace />;
   }
 
-  // Access granted → render children
   return <>{children}</>;
 }
