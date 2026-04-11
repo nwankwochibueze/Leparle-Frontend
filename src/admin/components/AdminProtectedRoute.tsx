@@ -21,7 +21,7 @@ export default function AdminProtectedRoute({ children }: Props) {
 
   useEffect(() => {
     const verifyAdminToken = async () => {
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
 
       // No token → logout
       if (!token) {

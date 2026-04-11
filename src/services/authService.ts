@@ -153,7 +153,7 @@ export const setAdminAuth = (token: string, adminData: AdminData): void => {
  * Get admin token
  */
 export const getAdminToken = (): string | null => {
-  return localStorage.getItem("adminToken");
+  return localStorage.getItem("admin-token");
 };
 
 /**
@@ -161,7 +161,7 @@ export const getAdminToken = (): string | null => {
  */
 export const getAdminData = (): AdminData | null => {
   try {
-    const data = localStorage.getItem("adminData");
+    const data = localStorage.getItem("admin-user");
     return data ? JSON.parse(data) : null;
   } catch (error) {
     console.error("Error parsing admin data:", error);
@@ -182,8 +182,8 @@ export const isAdminAuthenticated = (): boolean => {
  * Clear admin authentication
  */
 export const clearAdminAuth = (): void => {
-  localStorage.removeItem("adminToken");
-  localStorage.removeItem("adminData");
+  localStorage.removeItem("admin-token");
+  localStorage.removeItem("admin-user");
   
   // ✅ Dispatch custom event to notify components
   window.dispatchEvent(new Event("authCleared"));

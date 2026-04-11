@@ -43,7 +43,7 @@ export default function Dashboard() {
       const axiosInstance = createAuthAxios(true);
       const response = await axiosInstance.get("/admin/stats");
 
-      setStats(response.data);
+      setStats(response.data.data);
       setError(null);
     } catch (error) {
       // Handle session expiration
@@ -76,8 +76,6 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem("admin-token");
     localStorage.removeItem("admin-user");
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminData");
     navigate("/admin/login");
   };
 
