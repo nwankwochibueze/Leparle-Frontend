@@ -8,6 +8,9 @@ import {
   FiTrendingUp,
 } from "react-icons/fi";
 import { createAuthAxios } from "../services/authService";
+// Add these two imports:
+import { useAppDispatch } from "../store/hooks";
+import { adminLogout } from "../store/slices/adminAuthSlice";
 
 interface DashboardStats {
   totalUsers: number;
@@ -33,6 +36,7 @@ interface DashboardStats {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch(); 
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,11 +78,11 @@ export default function Dashboard() {
   }, [fetchStats]);
 
   const handleLogout = () => {
-    localStorage.removeItem("admin-token");
-    localStorage.removeItem("admin-user");
-    navigate("/admin/login");
-  };
-
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminData");
+  dispatch(adminLogout());
+  navigate("/admin/login");
+};
   const links = [
     { label: "Edit Homepage", path: "/admin/homepage", icon: FiPackage },
     { label: "Manage Products", path: "/admin/products", icon: FiShoppingBag },
