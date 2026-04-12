@@ -10,78 +10,40 @@ interface AdminAuthState {
   error: string | null;
 }
 
-// Convert technical errors to user-friendly messages for admins
 const getAdminFriendlyError = (error: unknown): string => {
-  // Type guard for axios errors
   if (typeof error === "object" && error !== null) {
     const err = error as {
       message?: string;
       code?: string;
       response?: {
         status?: number;
-        data?: {
-          message?: string;
-          error?: string;
-        };
+        data?: { message?: string; error?: string };
       };
     };
-
-    // Network/connection errors
-    if (err.message?.includes("Network Error") || err.code === "ERR_NETWORK") {
+    if (err.message?.includes("Network Error") || err.code === "ERR_NETWORK")
       return "Connection error. Please check your network and try again.";
-    }
-
-    // Server timeout
-    if (err.message?.includes("timeout") || err.code === "ECONNABORTED") {
+    if (err.message?.includes("timeout") || err.code === "ECONNABORTED")
       return "Server timeout. Please try again.";
-    }
-
-    // Service unavailable
-    if (err.response?.status === 503 || err.response?.status === 502) {
+    if (err.response?.status === 503 || err.response?.status === 502)
       return "Service temporarily unavailable. Please try again shortly.";
-    }
-
-    // Authentication errors (401)
-    if (err.response?.status === 401) {
+    if (err.response?.status === 401)
       return "Invalid admin credentials. Please check your email and password.";
-    }
-
-    // Not an admin (403)
-    if (err.response?.status === 403) {
+    if (err.response?.status === 403)
       return "Access denied. Admin privileges required.";
-    }
-
-    // Rate limiting (429)
-    if (err.response?.status === 429) {
+    if (err.response?.status === 429)
       return "Too many attempts. Please wait before trying again.";
-    }
-
-    // Server errors (500+)
-    if (err.response?.status && err.response.status >= 500) {
+    if (err.response?.status && err.response.status >= 500)
       return "Server error. Please try again later.";
-    }
-
-    // Check for specific backend error messages
-    if (err.response?.data?.message) {
-      return err.response.data.message;
-    }
-
-    if (err.response?.data?.error) {
-      return err.response.data.error;
-    }
-
-    // Generic fallback
-    if (err.message) {
-      return err.message;
-    }
+    if (err.response?.data?.message) return err.response.data.message;
+    if (err.response?.data?.error) return err.response.data.error;
+    if (err.message) return err.message;
   }
-
   return "Login failed. Please try again.";
 };
 
-// Load admin token/user on startup
-const adminToken = localStorage.getItem("adminToken"); // ✅
-const adminUserStr = localStorage.getItem("adminData"); // ✅
+// ✅ All keys consistent: adminToken and adminData
+const adminToken = localStorage.getItem("adminToken");
+const adminUserStr = localStorage.getItem("adminData");
 const adminUser = adminUserStr ? (JSON.parse(adminUserStr) as User) : null;
 
 const initialState: AdminAuthState = {
@@ -92,30 +54,24 @@ const initialState: AdminAuthState = {
   error: null,
 };
 
-// Admin Login
 export const adminLogin = createAsyncThunk(
   "adminAuth/login",
   async (
     credentials: { email: string; password: string },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.post("/admin/login", credentials);
-
-      // Verify admin role
       if (response.data.user.role !== "admin") {
         return rejectWithValue("Access denied. Admin privileges required.");
       }
-
       return response.data;
     } catch (error) {
-      const friendlyError = getAdminFriendlyError(error);
-      return rejectWithValue(friendlyError);
+      return rejectWithValue(getAdminFriendlyError(error));
     }
-  },
+  }
 );
 
-// Get Admin Profile
 export const getAdminProfile = createAsyncThunk(
   "adminAuth/getProfile",
   async (_, { getState, rejectWithValue }) => {
@@ -128,10 +84,9 @@ export const getAdminProfile = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      const friendlyError = getAdminFriendlyError(error);
-      return rejectWithValue(friendlyError);
+      return rejectWithValue(getAdminFriendlyError(error));
     }
-  },
+  }
 );
 
 const adminAuthSlice = createSlice({
@@ -143,15 +98,14 @@ const adminAuthSlice = createSlice({
       state.adminToken = null;
       state.isAdminAuthenticated = false;
       state.error = null;
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminData");
+      localStorage.removeItem("adminToken"); // ✅
+      localStorage.removeItem("adminData");  // ✅
     },
     clearAdminError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
-    // Admin Login
     builder
       .addCase(adminLogin.pending, (state) => {
         state.loading = true;
@@ -162,8 +116,8 @@ const adminAuthSlice = createSlice({
         state.adminUser = action.payload.user;
         state.adminToken = action.payload.token;
         state.isAdminAuthenticated = true;
-        localStorage.setItem("adminToken", action.payload.token);
-        localStorage.setItem("adminData", JSON.stringify(action.payload.user));
+        localStorage.setItem("adminToken", action.payload.token); // ✅
+        localStorage.setItem("adminData", JSON.stringify(action.payload.user)); // ✅
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.loading = false;
@@ -171,7 +125,6 @@ const adminAuthSlice = createSlice({
           (action.payload as string) || "Admin login failed. Please try again.";
       });
 
-    // Get Admin Profile
     builder
       .addCase(getAdminProfile.pending, (state) => {
         state.loading = true;
@@ -182,12 +135,13 @@ const adminAuthSlice = createSlice({
       })
       .addCase(getAdminProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "Failed to load profile.";
+        state.error =
+          (action.payload as string) || "Failed to load profile.";
         state.adminUser = null;
         state.adminToken = null;
         state.isAdminAuthenticated = false;
-        localStorage.removeItem("admin-token");
-        localStorage.removeItem("admin-user");
+        localStorage.removeItem("adminToken"); // ✅
+        localStorage.removeItem("adminData");  // ✅
       });
   },
 });
