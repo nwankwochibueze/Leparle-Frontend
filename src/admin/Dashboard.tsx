@@ -36,7 +36,7 @@ interface DashboardStats {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +59,7 @@ export default function Dashboard() {
           setError("Failed to load dashboard stats");
         }
       }
-      
+
       // Set default stats to prevent undefined errors
       setStats({
         totalUsers: 0,
@@ -77,12 +77,12 @@ export default function Dashboard() {
     fetchStats();
   }, [fetchStats]);
 
-const handleLogout = () => {
-  localStorage.removeItem("adminToken");
-  localStorage.removeItem("adminData");
-  dispatch(adminLogout());
-  window.location.href = "/admin/login"; // ← hard redirect, not navigate()
-}; 
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminData");
+    window.location.replace("/admin/login");
+    dispatch(adminLogout());
+  };
   const links = [
     { label: "Edit Homepage", path: "/admin/homepage", icon: FiPackage },
     { label: "Manage Products", path: "/admin/products", icon: FiShoppingBag },
@@ -105,9 +105,7 @@ const handleLogout = () => {
           <div className="text-red-500 mb-4">
             <FiPackage className="w-16 h-16 mx-auto" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-            {error}
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">{error}</h2>
           <button
             onClick={() => navigate("/admin/login")}
             className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
