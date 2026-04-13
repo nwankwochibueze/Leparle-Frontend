@@ -32,7 +32,7 @@ export default function UsersPanel() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
 
       const params = new URLSearchParams();
       if (search) params.append("search", search);
@@ -61,7 +61,7 @@ export default function UsersPanel() {
       return;
 
     try {
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
       await fetch(`${API_URL}/admin/users/${userId}/role`, {
         method: "PUT",
         headers: {
@@ -84,7 +84,7 @@ export default function UsersPanel() {
       return;
 
     try {
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
       await fetch(`${API_URL}/admin/users/${userId}/role`, {
         method: "PUT",
         headers: {
@@ -104,7 +104,7 @@ export default function UsersPanel() {
 
   const viewUserDetails = async (userId: string) => {
     try {
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
       const response = await fetch(`${API_URL}/admin/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,

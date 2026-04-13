@@ -70,7 +70,7 @@ export default function OrdersPanel() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
 
       const params = new URLSearchParams();
       if (search) params.append("search", search);
@@ -95,7 +95,7 @@ export default function OrdersPanel() {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const token = localStorage.getItem("admin-token");
+      const token = localStorage.getItem("adminToken");
       await fetch(`${API_URL}/admin/orders/${orderId}/status`, {
         method: "PUT",
         headers: {
